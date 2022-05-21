@@ -1,11 +1,11 @@
-import { KotlinParserVisitor } from './parser/KotlinParserVisitor';
+import { KindParserVisitor } from './parser/KindParserVisitor';
 import { RoutineSymbol, ScopedSymbol, SymbolTable, VariableSymbol } from 'antlr4-c3';
 import { AbstractParseTreeVisitor, ParseTree } from 'antlr4ts/tree';
-import { FunctionDeclarationContext, VariableDeclarationContext } from './parser/KotlinParser';
+import { FunctionDeclarationContext, VariableDeclarationContext } from './parser/KindParser';
 
 export class SymbolTableVisitor
   extends AbstractParseTreeVisitor<SymbolTable>
-  implements KotlinParserVisitor<SymbolTable>
+  implements KindParserVisitor<SymbolTable>
 {
   constructor(
     protected readonly symbolTable = new SymbolTable('', {}),

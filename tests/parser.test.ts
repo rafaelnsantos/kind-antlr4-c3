@@ -1,15 +1,15 @@
 import { expect } from 'chai';
 
 import { CharStreams, CommonTokenStream } from 'antlr4ts';
-import { KotlinLexer } from '../src/parser/KotlinLexer';
-import { KotlinParser } from '../src/parser/KotlinParser';
+import { KindLexer } from '../src/parser/KindLexer';
+import { KindParser } from '../src/parser/KindParser';
 
 describe('variableRead rule refactoring', function () {
   it('parses variables', function () {
     const code = `x`;
     const input = CharStreams.fromString(code);
-    const lexer = new KotlinLexer(input);
-    const parser = new KotlinParser(new CommonTokenStream(lexer));
+    const lexer = new KindLexer(input);
+    const parser = new KindParser(new CommonTokenStream(lexer));
 
     parser.variableRead();
     expect(parser.numberOfSyntaxErrors).to.equal(0);
@@ -18,8 +18,8 @@ describe('variableRead rule refactoring', function () {
   it('parses variables with infix operators as expressions', function () {
     const code = `x++`;
     const input = CharStreams.fromString(code);
-    const lexer = new KotlinLexer(input);
-    const parser = new KotlinParser(new CommonTokenStream(lexer));
+    const lexer = new KindLexer(input);
+    const parser = new KindParser(new CommonTokenStream(lexer));
 
     parser.expression();
     expect(parser.numberOfSyntaxErrors).to.equal(0);
@@ -28,8 +28,8 @@ describe('variableRead rule refactoring', function () {
   it('parses variables with infix operators as variable reads', function () {
     const code = `x++`;
     const input = CharStreams.fromString(code);
-    const lexer = new KotlinLexer(input);
-    const parser = new KotlinParser(new CommonTokenStream(lexer));
+    const lexer = new KindLexer(input);
+    const parser = new KindParser(new CommonTokenStream(lexer));
 
     const tree = parser.postfixUnaryExpression();
     expect(parser.numberOfSyntaxErrors).to.equal(0);
@@ -40,8 +40,8 @@ describe('variableRead rule refactoring', function () {
   it('parses parenthesized variables as expressions', function () {
     const code = `(x)`;
     const input = CharStreams.fromString(code);
-    const lexer = new KotlinLexer(input);
-    const parser = new KotlinParser(new CommonTokenStream(lexer));
+    const lexer = new KindLexer(input);
+    const parser = new KindParser(new CommonTokenStream(lexer));
 
     parser.expression();
     expect(parser.numberOfSyntaxErrors).to.equal(0);
@@ -50,8 +50,8 @@ describe('variableRead rule refactoring', function () {
   it('parses parenthesized variables as variable reads', function () {
     const code = `(x)`;
     const input = CharStreams.fromString(code);
-    const lexer = new KotlinLexer(input);
-    const parser = new KotlinParser(new CommonTokenStream(lexer));
+    const lexer = new KindLexer(input);
+    const parser = new KindParser(new CommonTokenStream(lexer));
 
     const tree = parser.atomicExpression();
     expect(parser.numberOfSyntaxErrors).to.equal(0);
@@ -61,8 +61,8 @@ describe('variableRead rule refactoring', function () {
   it('parses function calls as expressions', function () {
     const code = `f()`;
     const input = CharStreams.fromString(code);
-    const lexer = new KotlinLexer(input);
-    const parser = new KotlinParser(new CommonTokenStream(lexer));
+    const lexer = new KindLexer(input);
+    const parser = new KindParser(new CommonTokenStream(lexer));
 
     const tree = parser.expression();
     expect(parser.numberOfSyntaxErrors).to.equal(0);
@@ -71,8 +71,8 @@ describe('variableRead rule refactoring', function () {
   it('parses identifiers in function calls as simpleIdentifiers', function () {
     const code = `f()`;
     const input = CharStreams.fromString(code);
-    const lexer = new KotlinLexer(input);
-    const parser = new KotlinParser(new CommonTokenStream(lexer));
+    const lexer = new KindLexer(input);
+    const parser = new KindParser(new CommonTokenStream(lexer));
 
     const tree = parser.postfixUnaryExpression();
     expect(parser.numberOfSyntaxErrors).to.equal(0);
@@ -86,10 +86,10 @@ describe('variableRead rule refactoring', function () {
             
             fun bar() {}`;
     const input = CharStreams.fromString(code);
-    const lexer = new KotlinLexer(input);
-    const parser = new KotlinParser(new CommonTokenStream(lexer));
+    const lexer = new KindLexer(input);
+    const parser = new KindParser(new CommonTokenStream(lexer));
 
-    const tree = parser.kotlinFile();
+    const tree = parser.kindFile();
     expect(parser.numberOfSyntaxErrors).to.equal(0);
     expect(input.index).to.equal(input.size);
     expect(tree.preamble().importList().importHeader().length).to.equal(1);

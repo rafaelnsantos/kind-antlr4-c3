@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { CharStreams, CommonTokenStream } from 'antlr4ts';
-import { KotlinLexer } from '../src/parser/KotlinLexer';
-import { KotlinParser } from '../src/parser/KotlinParser';
+import { KindLexer } from '../src/parser/KindLexer';
+import { KindParser } from '../src/parser/KindParser';
 import { computeTokenPosition } from '../src/compute-token-position';
 
 describe('Token position', function () {
@@ -12,10 +12,10 @@ describe('Token position', function () {
 }`;
   it('has the right index', function () {
     const input = CharStreams.fromString(code);
-    const lexer = new KotlinLexer(input);
+    const lexer = new KindLexer(input);
     const tokenStream = new CommonTokenStream(lexer);
-    const parser = new KotlinParser(tokenStream);
-    const parseTree = parser.kotlinFile();
+    const parser = new KindParser(tokenStream);
+    const parseTree = parser.kindFile();
     expect(parser.numberOfSyntaxErrors).to.equal(0);
     expect(input.index).to.equal(input.size);
     const tokenPosition = computeTokenPosition(parseTree, tokenStream, { line: 4, column: 7 });
@@ -24,10 +24,10 @@ describe('Token position', function () {
   });
   it("includes partial text match ('fun' keyword)", function () {
     const input = CharStreams.fromString(code);
-    const lexer = new KotlinLexer(input);
+    const lexer = new KindLexer(input);
     const tokenStream = new CommonTokenStream(lexer);
-    const parser = new KotlinParser(tokenStream);
-    const parseTree = parser.kotlinFile();
+    const parser = new KindParser(tokenStream);
+    const parseTree = parser.kindFile();
     expect(parser.numberOfSyntaxErrors).to.equal(0);
     expect(input.index).to.equal(input.size);
     const tokenPosition = computeTokenPosition(parseTree, tokenStream, { line: 1, column: 2 });
@@ -37,10 +37,10 @@ describe('Token position', function () {
   });
   it('includes partial text match (function name)', function () {
     const input = CharStreams.fromString(code);
-    const lexer = new KotlinLexer(input);
+    const lexer = new KindLexer(input);
     const tokenStream = new CommonTokenStream(lexer);
-    const parser = new KotlinParser(tokenStream);
-    const parseTree = parser.kotlinFile();
+    const parser = new KindParser(tokenStream);
+    const parseTree = parser.kindFile();
     expect(parser.numberOfSyntaxErrors).to.equal(0);
     expect(input.index).to.equal(input.size);
     const tokenPosition = computeTokenPosition(parseTree, tokenStream, { line: 1, column: 7 });
@@ -54,10 +54,10 @@ describe('Token position', function () {
         doSomething()
     } 
 }`);
-    const lexer = new KotlinLexer(input);
+    const lexer = new KindLexer(input);
     const tokenStream = new CommonTokenStream(lexer);
-    const parser = new KotlinParser(tokenStream);
-    const parseTree = parser.kotlinFile();
+    const parser = new KindParser(tokenStream);
+    const parseTree = parser.kindFile();
     expect(parser.numberOfSyntaxErrors).to.equal(3);
     expect(input.index).to.equal(input.size);
     const tokenPosition = computeTokenPosition(parseTree, tokenStream, { line: 4, column: 7 });

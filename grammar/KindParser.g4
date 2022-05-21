@@ -10,11 +10,11 @@
  * https://github.com/JetBrains/kotlin/tree/master/compiler/testData/psi
  */
 
-parser grammar KotlinParser;
+parser grammar KindParser;
 
-options { tokenVocab = KotlinLexer; }
+options { tokenVocab = KindLexer; }
 
-kotlinFile
+kindFile
     : NL* preamble anysemi* (topLevelObject (anysemi+ topLevelObject?)*)? EOF
     ;
 

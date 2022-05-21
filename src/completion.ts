@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { KotlinLexer } from './parser/KotlinLexer';
+import { KindLexer } from './parser/KindLexer';
 import { CharStreams, CommonTokenStream } from 'antlr4ts';
-import { KotlinParser, VariableReadContext } from './parser/KotlinParser';
+import { KindParser, VariableReadContext } from './parser/KindParser';
 import { CodeCompletionCore, ScopedSymbol, SymbolTable, VariableSymbol } from 'antlr4-c3';
 import { ParseTree, TerminalNode } from 'antlr4ts/tree';
 import { SymbolTableVisitor } from './symbol-table-visitor';
@@ -79,51 +79,51 @@ export function setTokenMatcher(fn) {
 }
 
 export function getSuggestionsForParseTree(
-  parser: KotlinParser,
+  parser: KindParser,
   parseTree: ParseTree,
   symbolTableFn: () => SymbolTable,
   position: TokenPosition
 ) {
   const core = new CodeCompletionCore(parser);
-  // Luckily, the Kotlin lexer defines all keywords and identifiers after operators,
+  // Luckily, the Kind lexer defines all keywords and identifiers after operators,
   // so we can simply exclude the first non-keyword tokens
-  const ignored = Array.from(Array(KotlinParser.FILE).keys());
+  const ignored = Array.from(Array(KindParser.FILE).keys());
   ignored.push(
-    KotlinParser.BinLiteral,
-    KotlinParser.BooleanLiteral,
-    KotlinParser.CharacterLiteral,
-    KotlinParser.DoubleLiteral,
-    KotlinParser.HexLiteral,
-    KotlinParser.IntegerLiteral,
-    KotlinParser.LongLiteral,
-    KotlinParser.NullLiteral,
-    KotlinParser.RealLiteral,
-    KotlinParser.DelimitedComment,
-    KotlinParser.LineComment
+    KindParser.BinLiteral,
+    KindParser.BooleanLiteral,
+    KindParser.CharacterLiteral,
+    KindParser.DoubleLiteral,
+    KindParser.HexLiteral,
+    KindParser.IntegerLiteral,
+    KindParser.LongLiteral,
+    KindParser.NullLiteral,
+    KindParser.RealLiteral,
+    KindParser.DelimitedComment,
+    KindParser.LineComment
   );
-  ignored.push(KotlinParser.QUOTE_OPEN, KotlinParser.QUOTE_CLOSE, KotlinParser.TRIPLE_QUOTE_OPEN);
-  ignored.push(KotlinParser.LabelDefinition, KotlinParser.LabelReference); // We don't handle labels for simplicity
+  ignored.push(KindParser.QUOTE_OPEN, KindParser.QUOTE_CLOSE, KindParser.TRIPLE_QUOTE_OPEN);
+  ignored.push(KindParser.LabelDefinition, KindParser.LabelReference); // We don't handle labels for simplicity
   core.ignoredTokens = new Set(ignored);
   core.preferredRules = new Set([
-    KotlinParser.RULE_variableRead,
-    KotlinParser.RULE_suggestArgument,
+    KindParser.RULE_variableRead,
+    KindParser.RULE_suggestArgument,
   ]);
   const candidates = core.collectCandidates(position.index);
 
   const completions = [];
   if (
-    candidates.rules.has(KotlinParser.RULE_variableRead) ||
-    candidates.rules.has(KotlinParser.RULE_suggestArgument)
+    candidates.rules.has(KindParser.RULE_variableRead) ||
+    candidates.rules.has(KindParser.RULE_suggestArgument)
   ) {
     completions.push(...suggestVariables(symbolTableFn(), position));
   }
   const tokens = [];
   candidates.tokens.forEach((_, k) => {
-    if (k === KotlinParser.Identifier) {
+    if (k === KindParser.Identifier) {
       // Skip, we’ve already handled it above
-    } else if (k === KotlinParser.NOT_IN) {
+    } else if (k === KindParser.NOT_IN) {
       tokens.push('!in');
-    } else if (k === KotlinParser.NOT_IS) {
+    } else if (k === KindParser.NOT_IS) {
       tokens.push('!is');
     } else {
       const symbolicName = parser.vocabulary.getSymbolicName(k);
@@ -145,11 +145,11 @@ export function getSuggestions(
   computeTokenPosition: ComputeTokenPositionFunction
 ) {
   const input = CharStreams.fromString(code);
-  const lexer = new KotlinLexer(input);
+  const lexer = new KindLexer(input);
   const tokenStream = new CommonTokenStream(lexer);
-  const parser = new KotlinParser(tokenStream);
+  const parser = new KindParser(tokenStream);
 
-  const parseTree = parser.kotlinFile();
+  const parseTree = parser.kindFile();
 
   const position = computeTokenPosition(parseTree, tokenStream, caretPosition);
   if (!position) {

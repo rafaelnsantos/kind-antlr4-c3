@@ -5,7 +5,7 @@ import { ParserRuleContext, Token, TokenStream } from 'antlr4ts';
 export function tokenPositionComputer(identifierTokenTypes: number[] = []) {
   return (parseTree: ParseTree, tokens: TokenStream, caretPosition: CaretPosition) =>
     computeTokenPosition(parseTree, tokens, caretPosition, identifierTokenTypes);
-}
+} 
 
 export function computeTokenPosition(
   parseTree: ParseTree,

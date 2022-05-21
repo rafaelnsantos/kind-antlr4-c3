@@ -1,5 +1,5 @@
 {
-	"name": "toy-kotlin-language-server",
+	"name": "kind-antlr4-c3",
 	"description": "Simple Language Server component for the Kotlin language, to demonstrate code completion with antlr4-c3.",
 	"version": "1.2.0",
 	"author": "Strumenta s.r.l.",
@@ -23,7 +23,7 @@
 	},
 	"scripts": {
 		"preantlr4ts": "rimraf src/parser grammar/.antlr",
-		"antlr4ts": "antlr4ts -o src/parser -Xexact-output-dir -visitor grammar/KotlinParser.g4 grammar/KotlinLexer.g4",
+		"antlr4ts": "antlr4ts -o src/parser -Xexact-output-dir -visitor grammar/KindParser.g4 grammar/KindLexer.g4",
 		"prebuild": "rimraf out",
 		"build": "npm run antlr4ts && tsc -b",
 		"test": "mocha -r ts-node/register tests/**/*.test.ts"
